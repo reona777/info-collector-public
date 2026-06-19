@@ -122,7 +122,7 @@ def post_to_slack(all_items):
 
 # ── 前日の👍リアクション記事を取得 ───────────────
 def fetch_liked_items():
-    """前日にC0B55CF29C0チャンネルで👍リアクションがついたメッセージを取得"""
+    """前日に対象チャンネルで👍リアクションがついたメッセージを取得"""
     yesterday_start = datetime.now(timezone.utc) - timedelta(hours=24)
     yesterday_end   = datetime.now(timezone.utc)
 
