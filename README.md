@@ -64,4 +64,33 @@ pip install -r scripts/requirements.txt
 python scripts/collect.py
 ```
 
-GitHub Actionsで毎日自動実行する場合は、上記5つの環境変数をGitHub Secretsに登録してから **Actions → Run workflow** で実行してください。
+## スプレッドシートの構成
+
+初回実行時に3つのシートを自動生成します。
+
+| シート | 内容 |
+|---|---|
+| 収集ログ | 収集日時・ソース・タイトル・URL・公開日・お気に入り・メモ。URLで重複を除外して追記 |
+| ダッシュ | ソース別の件数を `COUNTIF` で集計（値ではなく数式を置くので、ログが増えれば自動で追従する） |
+| お気に入り | 👍が付いた記事を翌日の実行時に転記 |
+
+## GitHub Actions
+
+ワークフローは `workflow_dispatch` のみで、`schedule` は置いていません。上記5つの環境変数をGitHub Secretsに登録してから **Actions → 情報収集 daily → Run workflow** で実行します。
+
+定刻に動かしたい場合、GitHub Actionsの `schedule` は混雑時に数十分ずれるため、外部cronサービスからGitHub APIの `workflow_dispatch` を叩くほうが確実です（そのパターンは [github-actions-scheduler](https://github.com/reona777/github-actions-scheduler) にまとめてあります）。
+
+## ファイル構成
+
+```
+info-collector/
+├── scripts/
+│   ├── collect.py          # 収集・Slack投稿・スプレッドシート蓄積
+│   └── requirements.txt
+└── .github/workflows/
+    └── collect.yml         # 手動実行（workflow_dispatch）
+```
+
+## ライセンス
+
+MIT
