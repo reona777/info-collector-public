@@ -1,13 +1,14 @@
-# info-collector
+# info-collector-public
 
 > Zenn・HackerNews・GitHub Trendingの記事を毎日自動収集し、Slack投稿とスプレッドシート蓄積を行う情報収集パイプライン
 
-エンジニアが毎日行う「技術記事のチェック」を自動化。RSSフィード・スクレイピング・GitHub APIから記事を収集・フィルタリングしてSlackへ投稿。👍リアクションをつけた記事は翌日自動でお気に入りに保存されます。
+エンジニアが毎日行う「技術記事のチェック」を自動化。RSSフィードとスクレイピングで記事を集め、ソースごとに絞り込んでSlackへ投稿。👍リアクションをつけた記事は翌日自動でお気に入りに保存されます。
 
 ## 機能
 
 - **RSS収集**: Zenn（AI / 機械学習 / 自動化）、HackerNews（100pt以上）から最新記事を取得
 - **GitHub Trending**: 当日のトレンドリポジトリをスクレイピングで取得
+- **1ソースあたり5件まで**（`MAX_ITEMS_PER_SOURCE`）。全部流すとSlackが読まれなくなるため
 - **Slack投稿**: 1件1メッセージで投稿。👍リアクションをつけると翌日お気に入りに自動保存
 - **スプレッドシート蓄積**: 収集ログ・ダッシュボード・お気に入りの3シートで管理
 
@@ -26,6 +27,7 @@ RSS とスクレイピングを組み合わせて自動収集・Slack 投稿す�
 
 - **Python 3.11+**
 - **feedparser** — RSSフィード取得
+- **requests / BeautifulSoup** — GitHub Trending のスクレイピング
 - **Slack Bot API** — メッセージ投稿・リアクション監視
 - **gspread** — スプレッドシート書き込み
 - **GitHub Actions** — 毎日の自動実行
@@ -83,12 +85,14 @@ python scripts/collect.py
 ## ファイル構成
 
 ```
-info-collector/
+info-collector-public/
 ├── scripts/
 │   ├── collect.py          # 収集・Slack投稿・スプレッドシート蓄積
 │   └── requirements.txt
-└── .github/workflows/
-    └── collect.yml         # 手動実行（workflow_dispatch）
+├── .github/workflows/
+│   └── collect.yml         # 手動実行（workflow_dispatch）
+├── LICENSE
+└── README.md
 ```
 
 ## ライセンス
